@@ -48,6 +48,7 @@ import org.ohdsi.webapi.vocabulary.ConceptRelationship;
 import org.ohdsi.webapi.vocabulary.ConceptSearch;
 import org.ohdsi.webapi.vocabulary.DescendentOfAncestorSearch;
 import org.ohdsi.webapi.vocabulary.Domain;
+import org.ohdsi.webapi.vocabulary.RecommendedConcept;
 import org.ohdsi.webapi.vocabulary.RelatedConcept;
 import org.ohdsi.webapi.vocabulary.RelatedConceptSearch;
 import org.ohdsi.webapi.vocabulary.SearchProviderConfig;
@@ -209,6 +210,7 @@ public class VocabularyService extends AbstractDaoService {
 		Source source = getSourceRepository().findBySourceKey(sourceKey);
 		return executeIdentifierLookup(source, identifiers);
   }
+	
 	
 	protected Collection<Concept> executeIdentifierLookup(Source source, long[] identifiers) {
    Collection<Concept> concepts = new ArrayList<>();
@@ -1049,6 +1051,74 @@ public class VocabularyService extends AbstractDaoService {
     String tqValue = source.getTableQualifier(SourceDaimon.DaimonType.Vocabulary);
     List<Integer> conceptArray = Arrays.stream(conceptList).map(NumberUtils::toInt).collect(Collectors.toList());
     return new PreparedStatementRenderer( source, sqlPath, tqName, tqValue, "id", conceptArray.toArray());
+  }
+	
+	  /**
+   * @summary Perform a lookup of an array of concept identifiers returning the
+   * matching concepts with their detailed properties.
+   * @param sourceKey path parameter specifying the source key identifying the
+   * source to use for access to the set of vocabulary tables
+   * @param identifiers an array of concept identifiers
+   * @return collection of concepts
+   */
+  @Path("{sourceKey}/lookup/recommended")
+  @POST
+  @Produces(MediaType.APPLICATION_JSON)
+  @Consumes(MediaType.APPLICATION_JSON)
+  public Collection<RecommendedConcept> getRecommendedConceptsByList(@PathParam("sourceKey") String sourceKey, long[] identifiers) {
+		if (identifiers.length == 0) {
+			return new ArrayList<>();
+		}
+		
+		final Map<Long, RecommendedConcept> concepts = new HashMap<>();
+		Source source = getSourceRepository().findBySourceKey(sourceKey);
+		PreparedStatementRenderer psr = prepareGetRecommendedConcepts(identifiers, source);
+		
+    getSourceJdbcTemplate(source).query(psr.getSql(), psr.getSetter(), new RowMapper<Void>() {
+      @Override
+      public Void mapRow(ResultSet resultSet, int arg1) throws SQLException {
+        addRecommended(concepts, resultSet);
+        return null;
+      }
+    });
+		
+		return concepts.values();
+  }
+	
+	protected PreparedStatementRenderer prepareGetRecommendedConcepts(long[] identifiers, Source source) {
+    String tableQualifier = source.getTableQualifier(SourceDaimon.DaimonType.Vocabulary);
+    String resourcePath = "/resources/vocabulary/sql/getRecommendedConcepts.sql";
+
+    String[] searchStrings = {"CDM_schema"};
+    String[] replacementStrings = {tableQualifier};
+
+    String[] varNames = {"identifiers"};
+    Object[] varValues = {identifiers};
+
+    return new PreparedStatementRenderer(source, resourcePath, searchStrings, replacementStrings, varNames, varValues);
+  }
+	
+	private void addRecommended(final Map<Long, RecommendedConcept> concepts, final ResultSet resultSet) throws SQLException {
+		final Long concept_id = resultSet.getLong("CONCEPT_ID");
+		RecommendedConcept concept = concepts.get(concept_id);
+		
+    if (concept == null) {
+			concept = new RecommendedConcept();
+      concept.conceptId = concept_id;
+      concept.conceptCode = resultSet.getString("CONCEPT_CODE");
+      concept.conceptName = resultSet.getString("CONCEPT_NAME");
+      concept.standardConcept = resultSet.getString("STANDARD_CONCEPT");
+      concept.invalidReason = resultSet.getString("INVALID_REASON");
+      concept.vocabularyId = resultSet.getString("VOCABULARY_ID");
+      concept.conceptClassId = resultSet.getString("CONCEPT_CLASS_ID");
+      concept.domainId = resultSet.getString("DOMAIN_ID");
+			concept.relationships = new ArrayList<>();
+			
+			concepts.put(concept_id, concept);
+    }
+		
+		// TODO: Add relationship to the concept
+		concept.relationships.add(resultSet.getString("RELATIONSHIP_ID"));
   }
 
   @Path("{sourceKey}/compare")
