@@ -41,7 +41,8 @@ public abstract class AbstractForEachValidatorBuilder<T, V> extends ValidatorBui
     }
 
     protected List<ValidatorGroup<T, ?>> initGroups() {
-        return initAndBuildList(this.validatorGroupBuilders);
+        List rtn = initAndBuildList(this.validatorGroupBuilders);
+        return rtn;
     }
 
     protected List<Validator<T>> initValidators() {

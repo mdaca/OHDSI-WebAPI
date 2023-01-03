@@ -57,18 +57,32 @@ public class ValidatorGroupBuilder<T, V> extends ValidatorBaseBuilder<T, Validat
     }
 
     protected Path createChildPath() {
-
         return Path.createPath(this.basePath, this.attrName);
     }
 
     public ValidatorGroup<T, V> build() {
-
-        List<ValidatorGroup<V, ?>> groups = initAndBuildList(this.validatorGroupBuilders);
+        List<ValidatorGroup<V, ?>> groups = initAndBuildGroupList(this.validatorGroupBuilders);
         List<Validator<V>> validators = initAndBuildList(this.validatorBuilders);
-
         return new ValidatorGroup<>(validators, groups, valueGetter, conditionGetter);
     }
 
+    private List<ValidatorGroup<V, ?>> initAndBuildGroupList(List<ValidatorGroupBuilder<V, ?>> builders) {
+        builders.forEach(builder -> {
+            if (Objects.nonNull(this.errorMessage)) {
+                builder.errorMessage(this.errorMessage);
+            }
+            if (Objects.isNull(builder.getBasePath())) {
+                builder.basePath(createChildPath());
+            }
+            if (Objects.isNull(builder.severity)) {
+                builder.severity(this.severity);
+            }
+        });
+        return builders.stream()
+                .map(ValidatorBaseBuilder::build)
+                .collect(Collectors.toList());
+    }    
+    
     private <U> List<U> initAndBuildList(List<? extends ValidatorBaseBuilder<V, U, ?>> builders) {
 
         builders.forEach(builder -> {
