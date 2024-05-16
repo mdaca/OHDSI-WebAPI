@@ -165,8 +165,10 @@ public class PermissionManager {
       return user;
     }
 
-    checkRoleIsAbsent(login, false, "User with such login has been improperly removed from the database. " +
-            "Please contact your system administrator");
+    checkRoleIsAbsent(login, false, """
+            User with such login has been improperly removed from the database. \
+            Please contact your system administrator\
+            """);
     user = new UserEntity();
     user.setLogin(login);
     user.setName(name);
@@ -429,11 +431,10 @@ public class PermissionManager {
     Subject subject = SecurityUtils.getSubject();
     Object principalObject = subject.getPrincipals().getPrimaryPrincipal();
 
-    if (principalObject instanceof String)
-      return (String)principalObject;
+    if (principalObject instanceof String string)
+      return string;
 
-    if (principalObject instanceof Principal) {
-      Principal principal = (Principal)principalObject;
+    if (principalObject instanceof Principal principal) {
       return principal.getName();
     }
 
@@ -450,8 +451,8 @@ public class PermissionManager {
 
   public void addPermissionsFromTemplate(RoleEntity roleEntity, Map<String, String> template, String value) {
     for (Map.Entry<String, String> entry : template.entrySet()) {
-      String permission = String.format(entry.getKey(), value);
-      String description = String.format(entry.getValue(), value);
+      String permission = entry.getKey().formatted(value);
+      String description = entry.getValue().formatted(value);
       PermissionEntity permissionEntity = this.getOrAddPermission(permission, description);
       this.addPermission(roleEntity, permissionEntity);
     }
@@ -464,7 +465,7 @@ public class PermissionManager {
 
   public void removePermissionsFromTemplate(Map<String, String> template, String value) {
     for (Map.Entry<String, String> entry : template.entrySet()) {
-      String permission = String.format(entry.getKey(), value);
+      String permission = entry.getKey().formatted(value);
       this.removePermission(permission);
     }
   }
