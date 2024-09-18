@@ -1323,6 +1323,7 @@
           lower(email) = lower(?)</security.db.datasource.authenticationQuery>
       </properties>
       <repositories>
+     <!-- OHDSI Snapshots Repository -->
 	<repository>
           <id>ohdsi.snapshots</id>
           <name>repo.ohdsi.org-snapshots</name>
@@ -1335,6 +1336,19 @@
       	  </snapshots>
     	</repository>
       </repositories>
+     <!-- AWS CodeArtifact Repository -->
+        <repository>
+            <id>mdaca-OHDSI</id>
+            <name>AWS CodeArtifact MDACA OHDSI Repository</name>
+            <url>https://mdaca-201959883603.d.codeartifact.us-east-2.amazonaws.com/maven/OHDSI/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
     </profile>
     <profile>
       <id>webapi-mssql</id>
