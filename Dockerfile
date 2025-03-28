@@ -10,6 +10,7 @@ RUN curl -LSsO https://github.com/open-telemetry/opentelemetry-java-instrumentat
 
 # Download dependencies
 COPY pom.xml /code/
+COPY sample_settings.xml /code/
 RUN mkdir .git \
     && mvn package \
      -P${MAVEN_PROFILE}
