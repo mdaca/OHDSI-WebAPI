@@ -13,9 +13,9 @@ COPY .m2 /code/.m2
 
 # Download dependencies
 COPY pom.xml /code/
-RUN mvn package -q -s ${MAVEN_M2} ${MAVEN_PARAMS} -P${MAVEN_PROFILE}
+RUN mvn package -q -s .\sample_settings.xml ${MAVEN_PARAMS} -P${MAVEN_PROFILE}
 COPY src /code/src
-RUN mvn package -q -s ${MAVEN_M2} ${MAVEN_PARAMS} -P${MAVEN_PROFILE} && \
+RUN mvn package -q -s .\sample_settings.xml ${MAVEN_PARAMS} -P${MAVEN_PROFILE} && \
     mkdir war && \
     mv target/WebAPI.war war && \
     cd war && \
