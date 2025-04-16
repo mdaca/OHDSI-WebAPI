@@ -1519,6 +1519,7 @@
 	<profile>
       <id>webapi-docker</id>
       <properties>
+	<security.provider>AtlasRegularSecurity</security.provider>
         <git.branch>unknown</git.branch>
         <git.commit.id.abbrev>unknown</git.commit.id.abbrev>
         <maven.gitcommitid.skip>true</maven.gitcommitid.skip>
