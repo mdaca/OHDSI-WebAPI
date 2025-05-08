@@ -26,7 +26,7 @@ RUN mvn package -q -s ${MAVEN_M2} ${MAVEN_PARAMS} -P${MAVEN_PROFILE} && \
 FROM 201959883603.dkr.ecr.us-east-2.amazonaws.com/mdaca/base-images/ironbank-alpine-java:3.20.6_jdk17
 
 # Install PostgreSQL client
-RUN apk update && apk add --no-cache postgresql-client
+RUN apk update && apk add --no-cache postgresql-client iproute2
 
 # Any Java options to pass along, e.g. memory, garbage collection, etc.
 ENV JAVA_OPTS=""
