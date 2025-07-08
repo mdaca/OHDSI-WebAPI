@@ -75,7 +75,7 @@ public class DataAccessConfig {
             "org.postgresql.Driver", "com.microsoft.sqlserver.jdbc.SQLServerDriver", "oracle.jdbc.driver.OracleDriver", 
             "com.amazon.redshift.jdbc.Driver", "com.cloudera.impala.jdbc.Driver", "net.starschema.clouddb.jdbc.BQDriver", 
             "org.netezza.Driver", "com.simba.googlebigquery.jdbc42.Driver", "org.apache.hive.jdbc.HiveDriver", 
-            "com.simba.spark.jdbc.Driver", "net.snowflake.client.jdbc.SnowflakeDriver"
+            "com.simba.spark.jdbc.Driver", "net.snowflake.client.jdbc.SnowflakeDriver", "io.trino.jdbc.TrinoDriver"
         };
 
         for (String driverName : supportedDrivers) {

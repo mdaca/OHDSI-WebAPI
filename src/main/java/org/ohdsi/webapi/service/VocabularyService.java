@@ -64,6 +64,8 @@ import org.ohdsi.webapi.vocabulary.RelatedConceptSearch;
 import org.ohdsi.webapi.vocabulary.Vocabulary;
 import org.ohdsi.webapi.vocabulary.VocabularyInfo;
 import org.ohdsi.webapi.vocabulary.VocabularySearchService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.convert.support.GenericConversionService;
@@ -82,6 +84,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class VocabularyService extends AbstractDaoService {
 
+  private static final Logger LOG = LoggerFactory.getLogger(VocabularyService.class);
   private static Hashtable<String, VocabularyInfo> vocabularyInfoCache = null;
   public static final String DEFAULT_SEARCH_ROWS = "20000";
 
@@ -377,7 +380,7 @@ public class VocabularyService extends AbstractDaoService {
     return executeMappedLookup(source, identifiers);
   }
 
-	protected Collection<Concept> executeMappedLookup(Source source, long[] identifiers) {
+    protected Collection<Concept> executeMappedLookup(Source source, long[] identifiers) {
     Collection<Concept> concepts = new HashSet<>();
     if (identifiers.length == 0) {
       return concepts;
@@ -1199,6 +1202,8 @@ public class VocabularyService extends AbstractDaoService {
       String tqValue = source.getTableQualifier(SourceDaimon.DaimonType.Vocabulary);
       PreparedStatementRenderer psr = new PreparedStatementRenderer(source, sqlPath, "CDM_schema", tqValue);
       info.dialect = source.getSourceDialect();
+
+      LOG.debug("Putting vocabulary info for sourceKey={} into cache: sql={}, params={}, source={}", sourceKey, psr.getSql(), psr.getOrderedParams(), source);
       vocabularyInfoCache.put(sourceKey, getSourceJdbcTemplate(source).queryForObject(psr.getSql(), psr.getOrderedParams(), new RowMapper<VocabularyInfo>() {
         @Override
         public VocabularyInfo mapRow(final ResultSet resultSet, final int arg1) throws SQLException {

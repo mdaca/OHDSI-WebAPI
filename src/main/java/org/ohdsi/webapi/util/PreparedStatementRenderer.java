@@ -288,7 +288,7 @@ public class PreparedStatementRenderer implements ParameterizedSqlProvider {
   }
 
   public String getSql() {
-    if (targetDialect.equals("spark")) {
+    if (targetDialect.equals("spark") || targetDialect.equals("trino")) {
       try {
         sql = BigQuerySparkTranslate.sparkHandleInsert(sql, source.getSourceConnection());
       } catch (SQLException e) {

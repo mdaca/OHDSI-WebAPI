@@ -205,7 +205,11 @@ public abstract class AbstractDaoService extends AbstractAdminService {
     }
     DriverManagerDataSource dataSource;
     String connectionString = sourceHelper.getSourceConnectionString(source);
-    if (dataSourceData.getUsername() != null && dataSourceData.getPassword() != null) {
+    if (DBMSType.TRINO.getValue().equalsIgnoreCase(source.getSourceDialect()) && dataSourceData.getUsername() != null) {
+      String userName = dataSourceData.getUsername();
+      String password = (dataSourceData.getPassword() != null ? dataSourceData.getPassword() : "");
+      dataSource = new DriverManagerDataSource(connectionString, userName, password);
+    } else if (dataSourceData.getUsername() != null && dataSourceData.getPassword() != null) {
       // NOTE: jdbc link should NOT include username and password, because they have higher priority than separate ones
       dataSource = new DriverManagerDataSource(
               connectionString,
@@ -326,13 +330,13 @@ public abstract class AbstractDaoService extends AbstractAdminService {
     return transactionTemplateRequiresNew;
   }
 
-	/**
+    /**
    * @return the transactionTemplateNoTransaction
    */
   public TransactionTemplate getTransactionTemplateNoTransaction() {
     return transactionTemplateNoTransaction;
   }
-	
+    
   
   /**
    * @return the ohdsiSchema

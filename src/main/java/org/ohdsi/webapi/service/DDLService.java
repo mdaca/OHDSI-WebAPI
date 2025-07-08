@@ -121,7 +121,7 @@ public class DDLService {
 			"/ddl/achilles/achilles_result_concept_count.sql"
 	);
 
-	private static final Collection<String> DBMS_NO_INDEXES = Arrays.asList("redshift", "impala", "netezza", "spark");
+	private static final Collection<String> DBMS_NO_INDEXES = Arrays.asList("redshift", "impala", "netezza", "spark", "trino");
 
 	/**
 	 * Get DDL for results schema

@@ -50,8 +50,13 @@ public class DropCohortTableListener extends JobExecutionListenerSupport {
     final String tempQualifier = SourceUtils.getTempQualifier(source, resultsQualifier);
     String toRemove = SqlTranslate.translateSql(sql, source.getSourceDialect(), null, tempQualifier);
 
+    // TODO: verify TRINO
     if (Objects.equals(DBMSType.SPARK.getOhdsiDB(), source.getSourceDialect()) ||
-            Objects.equals(DBMSType.HIVE.getOhdsiDB(), source.getSourceDialect())) {
+            Objects.equals(DBMSType.HIVE.getOhdsiDB(), source.getSourceDialect()) ||
+            Objects.equals(DBMSType.TRINO.getOhdsiDB(), source.getSourceDialect())) {
+      // Spark, Hive and Trino do not support semicolon at the end of the statement
+      // and it causes an error when executing the statement
+      // so we remove it
       toRemove = StringUtils.remove(toRemove, ';');
     }
     jdbcTemplate.execute(toRemove);

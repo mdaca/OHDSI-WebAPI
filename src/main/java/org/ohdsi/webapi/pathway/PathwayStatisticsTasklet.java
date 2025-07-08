@@ -170,7 +170,7 @@ public class PathwayStatisticsTasklet extends CancelableTasklet {
 
 	private int[] savePaths(Source source, Long generationId) throws SQLException {
 		String sql = SAVE_PATHS_SQL;
-		if (source.getSourceDialect().equals("spark")) {
+		if (source.getSourceDialect().equals("spark") || source.getSourceDialect().equals("trino")) {
 			sql = SqlRender.renderSql(sql, 
 							new String[]{"target_database_schema", GENERATION_ID}, 
 							new String[]{source.getTableQualifier(SourceDaimon.DaimonType.Results), generationId.toString()}

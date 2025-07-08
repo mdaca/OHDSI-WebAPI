@@ -4,6 +4,7 @@ WebAPIConfig/
 .idea/
 .metadata/
 *.iml
+*.log
 sandbox/
 /target/
 .settings

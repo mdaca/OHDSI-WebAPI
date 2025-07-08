@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Component;
 
+import jakarta.ws.rs.PathParam;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
@@ -49,17 +50,34 @@ public class AchillesCacheAspect {
     @Around("cachePointcut()")
     public Object cache(ProceedingJoinPoint joinPoint) throws Throwable {
         String cacheName = getCacheName(joinPoint);
-        String sourceKey = getParams(joinPoint).get("sourceKey");
+        Map<String, String> params = getParams(joinPoint);
+        String sourceKey = params.get("sourceKey");
+        
+        // Add better logging for debugging
+        if (sourceKey == null) {
+            LOG.warn("sourceKey parameter is null. Available parameters: {}", params.keySet());
+            LOG.debug("Method signature: {}", joinPoint.getSignature());
+            LOG.debug("Method arguments: {}", java.util.Arrays.toString(joinPoint.getArgs()));
+            // Fall back to proceeding without cache
+            return joinPoint.proceed();
+        }
+        
         try {
-            Source source = getSource(Objects.requireNonNull(sourceKey));
-            AchillesCacheEntity cacheEntity = cacheService.getCache(Objects.requireNonNull(source), cacheName);
+            Source source = getSource(sourceKey);
+            if (source == null) {
+                LOG.warn("No source found for sourceKey: {}", sourceKey);
+                // Fall back to proceeding without cache
+                return joinPoint.proceed();
+            }
+            
+            AchillesCacheEntity cacheEntity = cacheService.getCache(source, cacheName);
             if (Objects.isNull(cacheEntity)) {
                 Object result = joinPoint.proceed();
                 try {
                     cacheEntity = cacheService.createCache(source, cacheName, result);
                 } catch (DataIntegrityViolationException e) {
                     // cache can be created during executing join point, try to get it again
-                    cacheEntity = cacheService.getCache(Objects.requireNonNull(source), cacheName);
+                    cacheEntity = cacheService.getCache(source, cacheName);
                 }
             }
 
@@ -98,16 +116,48 @@ public class AchillesCacheAspect {
     }
 
     private Map<String, String> getParams(JoinPoint joinPoint) {
-        String[] names = ((MethodSignature) joinPoint.getSignature()).getParameterNames();
+        MethodSignature signature = (MethodSignature) joinPoint.getSignature();
+        String[] names = signature.getParameterNames();
         Object[] objects = joinPoint.getArgs();
+        Method method = signature.getMethod();
         
-        if(names == null) {
-        	return new HashMap<String, String>();
+        if(names == null || objects == null) {
+            LOG.warn("Parameter names or values are null for method: {}", joinPoint.getSignature());
+            // Try to extract from annotations if parameter names are not available
+            return extractParamsFromAnnotations(method, objects);
         }
         
-        return IntStream.range(0, names.length)
+        if(names.length != objects.length) {
+            LOG.warn("Parameter names and values length mismatch for method: {}. Names: {}, Values: {}", 
+                    joinPoint.getSignature(), names.length, objects.length);
+            return new HashMap<String, String>();
+        }
+        
+        Map<String, String> params = IntStream.range(0, names.length)
                 .boxed()
                 .collect(Collectors.toMap(i -> names[i],
-                        i -> String.valueOf(objects[i])));
+                        i -> objects[i] != null ? String.valueOf(objects[i]) : "null"));
+        
+        LOG.debug("Extracted parameters for method {}: {}", joinPoint.getSignature(), params);
+        return params;
+    }
+    
+    private Map<String, String> extractParamsFromAnnotations(Method method, Object[] objects) {
+        Map<String, String> params = new HashMap<>();
+        java.lang.annotation.Annotation[][] paramAnnotations = method.getParameterAnnotations();
+        
+        for (int i = 0; i < paramAnnotations.length && i < objects.length; i++) {
+            for (java.lang.annotation.Annotation annotation : paramAnnotations[i]) {
+                if (annotation instanceof jakarta.ws.rs.PathParam) {
+                    jakarta.ws.rs.PathParam pathParam = (jakarta.ws.rs.PathParam) annotation;
+                    String paramName = pathParam.value();
+                    String paramValue = objects[i] != null ? String.valueOf(objects[i]) : "null";
+                    params.put(paramName, paramValue);
+                    LOG.debug("Extracted @PathParam {}: {}", paramName, paramValue);
+                }
+            }
+        }
+        
+        return params;
     }
 }
