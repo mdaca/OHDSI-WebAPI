@@ -13,6 +13,13 @@ RUN apk add --no-cache curl
 ARG OPENTELEMETRY_JAVA_AGENT_VERSION=2.8.0
 RUN curl -LSsO https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/download/v${OPENTELEMETRY_JAVA_AGENT_VERSION}/opentelemetry-javaagent.jar
 
+# Add the Trino JDBC driver
+# RUN mkdir -p lib/trino-jdbc && \
+#     curl -LSsO https://repo1.maven.org/maven2/io/trino/trino-jdbc/433/trino-jdbc-433.jar && \
+#     mv trino-jdbc-433.jar lib/trino-jdbc/trino-jdbc-433.jar
+RUN mkdir -p lib/trino-jdbc
+COPY code/trino/trino-jdbc-*.jar lib/trino-jdbc/
+
 RUN mkdir war
 COPY WebAPI.war war/WebAPI.war 
 RUN cd war \
@@ -46,6 +53,10 @@ COPY --from=builder /code/war/WEB-INF/lib*/* WEB-INF/lib/
 COPY --from=builder /code/war/org org
 COPY --from=builder /code/war/WEB-INF/classes WEB-INF/classes
 COPY --from=builder /code/war/META-INF META-INF
+
+# install Trino JDBC driver
+# https://trino.io/docs/current/installation/jdbc.html
+COPY --from=builder /code/lib/trino-jdbc/trino-jdbc-*.jar WEB-INF/lib/
 
 ENV WEBAPI_DATASOURCE_URL="jdbc:postgresql://host.docker.internal:5432/OHDSI?currentSchema=webapi"
 # ENV WEBAPI_DATASOURCE_URL="jdbc:postgresql://10.0.21.93:32000/OHDSI?currentSchema=webapi"
