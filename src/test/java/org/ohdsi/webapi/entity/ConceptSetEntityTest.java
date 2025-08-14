@@ -1,5 +1,6 @@
 package org.ohdsi.webapi.entity;
 
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -8,6 +9,9 @@ import org.ohdsi.webapi.conceptset.ConceptSetRepository;
 import org.ohdsi.webapi.service.ConceptSetService;
 import org.ohdsi.webapi.service.dto.ConceptSetDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Map;
 
 import static org.ohdsi.webapi.service.ConceptSetService.COPY_NAME;
 import static org.ohdsi.webapi.test.TestConstants.NEW_TEST_ENTITY;
@@ -22,10 +26,11 @@ public class ConceptSetEntityTest extends AbstractDatabaseTest implements TestCr
     // in JUnit 4 it's impossible to mark methods inside interface with annotations, it was implemented in JUnit 5. After upgrade it's needed
     // to mark interface methods with @Test, @Before, @After and to remove them from this class
     @AfterEach
+    @Transactional
     @Override
     public void tearDownDB() {
-
-        csRepository.deleteAll();
+            cleanupService.truncateTable("public.concept_set");
+//            csRepository.deleteAll();
     }
 
     @BeforeEach
@@ -73,14 +78,16 @@ public class ConceptSetEntityTest extends AbstractDatabaseTest implements TestCr
     @Override
     public ConceptSetDTO createCopy(ConceptSetDTO dto) {
 
-        dto.setName(csService.getNameForCopy(dto.getId()).get(COPY_NAME));
+        Integer id = dto.getId();
+        Map<String, String> stringMap = csService.getNameForCopy(id);
+        dto.setName(stringMap.get(COPY_NAME));
         return csService.createConceptSet(dto);
     }
 
     @Override
     public void initFirstDTO() {
 
-        firstSavedDTO = createEntity(NEW_TEST_ENTITY);
+            firstSavedDTO = createEntity(NEW_TEST_ENTITY);
     }
 
     @Override

@@ -5,10 +5,12 @@ import org.junit.ClassRule;
 import org.junit.rules.ExternalResource;
 import org.junit.rules.RuleChain;
 import org.junit.rules.TestRule; */
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
 import java.sql.Driver;
@@ -18,14 +20,22 @@ import java.sql.SQLException;
 @SpringBootTest
 @TestPropertySource(locations = "/application-test.properties")
 public abstract class AbstractDatabaseTest {
+    private static final Logger log = LoggerFactory.getLogger(AbstractDatabaseTest.class);
+
+    @Autowired
+    protected DatabaseTestCleanupService cleanupService;
+
     static class JdbcTemplateTestWrapper /* extends ExternalResource MDACA Spring Boot 3 migration compilation issues */ {
         /* @Override  MDACA Spring Boot 3 migration compilation issues  */
         protected void before() throws Throwable {
-            jdbcTemplate = new JdbcTemplate(getDataSource());
+            DataSource dataSource = getDataSource();
+            jdbcTemplate = new JdbcTemplate(dataSource);
             try {
                 // note for future reference: should probably either define a TestContext DataSource with these params
                 // or make it so this proparty is only set once (during database initialization) since the below will run for each test class (but only be effective once)
-                System.setProperty("datasource.url", getDataSource().getConnection().getMetaData().getURL());
+                String url = dataSource.getConnection().getMetaData().getURL();
+                log.info("Test database URL: " + url);
+                System.setProperty("datasource.url", url);
                 System.setProperty("flyway.datasource.url", System.getProperty("datasource.url"));
             } catch (Exception ex) {
                 throw new RuntimeException(ex);
@@ -58,18 +68,22 @@ public abstract class AbstractDatabaseTest {
             .around(pg = new PostgresSingletonRule())
             .around(new JdbcTemplateTestWrapper());
 */
-    protected static PostgresSingletonRule pg;
+    protected static PostgresSingletonRule pg = new PostgresSingletonRule();
 
     protected static JdbcTemplate jdbcTemplate;
 
     protected static DataSource getDataSource() {
-        return pg.getEmbeddedPostgres().getPostgresDatabase();
+        DataSource database = pg.getEmbeddedPostgres().getPostgresDatabase();
+        log.info("Embedded Postgres Embedded Database: " + database);
+        return database;
     }
    
     protected void truncateTable (String tableName) {
-      jdbcTemplate.execute("TRUNCATE %s CASCADE".formatted(tableName));
+//      jdbcTemplate.execute("TRUNCATE %s CASCADE".formatted(tableName));
+      cleanupService.truncateTable(tableName);
     }
     protected void resetSequence(String sequenceName) {
-      jdbcTemplate.execute("ALTER SEQUENCE %s RESTART WITH 1".formatted(sequenceName));
+//      jdbcTemplate.execute("ALTER SEQUENCE %s RESTART WITH 1".formatted(sequenceName));
+      cleanupService.resetSequence(sequenceName);
     }
 }

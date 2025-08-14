@@ -11,8 +11,8 @@ import static org.hamcrest.Matchers.nullValue;
 
 public class DataSourceDTOParserTest {
 
-    public static final String PGSQL_CONN_STR = "jdbc:postgresql://localhost:5432/ohdsi?ssl=true&user=user&password=secret";
-    public static final String PGSQL_WO_PWD_CONN_STR = "jdbc:postgresql://localhost:5432/ohdsi?ssl=true";
+    public static final String PGSQL_CONN_STR = "jdbc:postgresql://localhost:5435/ohdsi?ssl=true&user=user&password=secret";
+    public static final String PGSQL_WO_PWD_CONN_STR = "jdbc:postgresql://localhost:5435/ohdsi?ssl=true";
     public static final String MSSQL_CONN_STR = "jdbc:sqlserver://localhost:1433;databaseName=ohdsi;user=msuser;password=password";
     public static final String PDW_CONN_STR = """
             jdbc:sqlserver://yourserver.database.windows.net:1433;database=yourdatabase;user=pdw_user;password=pdw_password;\

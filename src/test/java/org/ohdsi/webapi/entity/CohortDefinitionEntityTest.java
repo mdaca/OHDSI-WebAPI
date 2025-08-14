@@ -8,6 +8,7 @@ import org.ohdsi.webapi.cohortdefinition.CohortDefinitionRepository;
 import org.ohdsi.webapi.cohortdefinition.dto.CohortDTO;
 import org.ohdsi.webapi.service.CohortDefinitionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.ohdsi.webapi.test.TestConstants.NEW_TEST_ENTITY;
 
@@ -21,10 +22,10 @@ public class CohortDefinitionEntityTest extends AbstractDatabaseTest implements 
     // in JUnit 4 it's impossible to mark methods inside interface with annotations, it was implemented in JUnit 5. After upgrade it's needed
     // to mark interface methods with @Test, @Before, @After and to remove them from this class
     @AfterEach
+    @Transactional
     @Override
     public void tearDownDB() {
-
-        cdRepository.deleteAll();
+        cleanupService.truncateTable("public.cohort_definition");
     }
 
     @BeforeEach

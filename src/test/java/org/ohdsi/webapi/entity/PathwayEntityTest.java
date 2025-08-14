@@ -32,10 +32,10 @@ public class PathwayEntityTest extends AbstractDatabaseTest implements TestCreat
     // in JUnit 4 it's impossible to mark methods inside interface with annotations, it was implemented in JUnit 5. After upgrade it's needed
     // to mark interface methods with @Test, @Before, @After and to remove them from this class
     @AfterEach
+    @Transactional
     @Override
     public void tearDownDB() {
-
-        pwRepository.deleteAll();
+        cleanupService.truncateTable("public.pathway_analysis");
     }
 
     @BeforeEach

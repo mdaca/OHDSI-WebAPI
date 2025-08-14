@@ -1,5 +1,6 @@
 package org.ohdsi.webapi.versioning;
 
+import org.junit.jupiter.api.AfterEach;
 import org.ohdsi.webapi.reusable.ReusableService;
 import org.ohdsi.webapi.reusable.dto.ReusableDTO;
 import org.ohdsi.webapi.reusable.dto.ReusableVersionFullDTO;
@@ -7,6 +8,7 @@ import org.ohdsi.webapi.reusable.repository.ReusableRepository;
 import org.ohdsi.webapi.versioning.dto.VersionDTO;
 import org.ohdsi.webapi.versioning.dto.VersionUpdateDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.List;
@@ -20,6 +22,12 @@ public class ReusableVersioningTest extends BaseVersioningTest<ReusableDTO, Reus
 
     @Autowired
     private ReusableRepository repository;
+
+    @AfterEach
+    @Transactional
+    public void tearDownDB() {
+        cleanupService.truncateTable("public.reusable");
+    }
 
     @Override
     public void doCreateInitialData() throws IOException {

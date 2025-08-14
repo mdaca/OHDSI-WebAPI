@@ -37,15 +37,15 @@ public class ITStarter extends AbstractShiro {
         if (pg == null) {
             pg = EmbeddedPostgres.start();
             try {
-                System.setProperty("datasource.url", pg.getPostgresDatabase().getConnection().getMetaData().getURL());
+                String url = pg.getPostgresDatabase().getConnection().getMetaData().getURL();
+                log.info("Embedded Postgres database URL: {}", url);
+                System.setProperty("datasource.url", url);
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
+            // TODO - Why aren't these set in application.properties?
             System.setProperty("flyway.datasource.url", System.getProperty("datasource.url"));
-            System.setProperty("security.db.datasource.url", System.getProperty("datasource.url"));
-            System.setProperty("security.db.datasource.username", "postgres");
-            System.setProperty("security.db.datasource.password", "postgres");
-            System.setProperty("security.db.datasource.schema", "public");
+//            System.setProperty("security.db.datasource.schema", "webapi");
 
             //set up shiro
             Subject subjectUnderTest = Mockito.mock(Subject.class);

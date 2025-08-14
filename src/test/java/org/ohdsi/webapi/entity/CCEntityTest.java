@@ -38,10 +38,10 @@ public class CCEntityTest extends AbstractDatabaseTest implements TestCreate, Te
     }
 
     @AfterEach
+    @Transactional
     @Override
     public void tearDownDB() {
-
-        ccRepository.deleteAll();
+        cleanupService.truncateTable("public.cohort_characterization");
     }
 
     @Test

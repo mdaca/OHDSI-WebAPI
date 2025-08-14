@@ -23,6 +23,7 @@ import org.ohdsi.webapi.source.SourceDaimon;
 import org.ohdsi.webapi.source.SourceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 import java.io.IOException;
@@ -62,10 +63,10 @@ public class EstimationEntityTest extends AbstractDatabaseTest implements TestCr
     // in JUnit 4 it's impossible to mark methods inside interface with annotations, it was implemented in JUnit 5. After upgrade it's needed
     // to mark interface methods with @Test, @Before, @After and to remove them from this class
     @AfterEach
+    @Transactional
     @Override
     public void tearDownDB() {
-
-        pleRepository.deleteAll();
+        cleanupService.truncateTable("public.estimation");
     }
 
     @BeforeEach

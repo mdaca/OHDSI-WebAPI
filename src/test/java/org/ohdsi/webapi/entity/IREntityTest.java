@@ -8,6 +8,7 @@ import org.ohdsi.webapi.ircalc.IncidenceRateAnalysisRepository;
 import org.ohdsi.webapi.service.IRAnalysisResource;
 import org.ohdsi.webapi.service.dto.IRAnalysisDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.ohdsi.webapi.test.TestConstants.NEW_TEST_ENTITY;
 
@@ -21,10 +22,10 @@ public class IREntityTest extends AbstractDatabaseTest implements TestCreate, Te
     // in JUnit 4 it's impossible to mark methods inside interface with annotations, it was implemented in JUnit 5. After upgrade it's needed
     // to mark interface methods with @Test, @Before, @After and to remove them from this class
     @AfterEach
+    @Transactional
     @Override
     public void tearDownDB() {
-
-        irRepository.deleteAll();
+        cleanupService.truncateTable("public.ir_analysis");
     }
 
     @BeforeEach
