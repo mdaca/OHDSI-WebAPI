@@ -1,17 +1,11 @@
 name: Docker Maven Build and Push Docker Image to MDACA ECR
-
 on:
-  schedule:
-    - cron: '0 23 * * 0'
   push:
+    tags:
+      - 'v*'     # Only run when pushing tags that start with 'v' (like v1.0.0)
     branches:
-      - mdaca-3.0.2
-    paths:
-      - 'Dockerfile-mvn-no-local'
-      - 'src/*'
-      - '.m2/*'
-      - '.github/workflows/ci.yaml'
-      - 'pom.xml'
+      - 3.0.2     # Ensures the tag must be on main
+  workflow_dispatch:  # <-- Manual trigger, aligned with push
 jobs:
   build:
     runs-on: ubuntu-latest
