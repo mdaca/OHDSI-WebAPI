@@ -78,7 +78,7 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
-          IMAGE_TAG: 3.0.2.a
+          IMAGE_TAG: 3.0.2.b
           ECR_REPOSITORY: mdaca/ohdsi/webapi
         run: |
           # Set ENV for AW Cred

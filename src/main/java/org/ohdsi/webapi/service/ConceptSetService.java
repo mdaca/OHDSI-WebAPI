@@ -63,6 +63,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.convert.support.GenericConversionService;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RequestBody;
 
  /**
   * Provides REST services for working with
@@ -359,7 +360,7 @@ public class ConceptSetService extends AbstractDaoService implements HasTags<Int
     @Path("{id}/items")
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
-    public boolean saveConceptSetItems(@PathParam("id") final int id, ConceptSetItem[] items) {
+    public boolean saveConceptSetItems(@PathParam("id") final int id, @RequestBody ConceptSetItem[] items) {
         getConceptSetItemRepository().deleteByConceptSetId(id);
 
         for (ConceptSetItem csi : items) {
