@@ -4,7 +4,7 @@ on:
     tags:
       - 'v*'     # Only run when pushing tags that start with 'v' (like v1.0.0)
     branches:
-      - 3.0.2     # Ensures the tag must be on main
+      - mdaca-3.0.2     # Ensures the tag must be on main
   workflow_dispatch:  # <-- Manual trigger, aligned with push
 jobs:
   build:
