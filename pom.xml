@@ -756,7 +756,10 @@
    <artifactId>spring-boot-starter-tomcat</artifactId>
    <scope>provided</scope>
   </dependency>
-
+  <dependency>
+   <groupId>org.springframework.boot</groupId>
+   <artifactId>spring-boot-starter-batch</artifactId>
+  </dependency>
   <!-- We are intentionally overriding the Tomcat version from Spring Boot 1.5.22.RELEASE -->
   <!-- and assuming tomcat-jdbc.jar will be in the Tomcat installation folder (\apache-tomcat-8.5.xxx\lib). -->
   <!-- WebAPI.war.original should not contain overridden libraries -->
