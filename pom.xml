@@ -49,7 +49,7 @@
     <datasource.driverClassName>org.postgresql.Driver</datasource.driverClassName>
     <datasource.url>jdbc:postgresql://localhost:5432/OHDSI?currentSchema=webapi</datasource.url>
     <datasource.username>ohdsi_app_user</datasource.username>
-    <datasource.password>app1</datasource.password>
+    <datasource.password></datasource.password>
     <!--<datasource.validationQuery>SELECT 1</datasource.validationQuery>-->
     <!-- datasource.dialect>sql server</datasource.dialect -->
     <datasource.dialect>postgresql</datasource.dialect>
@@ -63,7 +63,7 @@
     <flyway.datasource.driverClassName>${datasource.driverClassName}</flyway.datasource.driverClassName>
     <flyway.datasource.url>${datasource.url}</flyway.datasource.url>
     <flyway.datasource.username>ohdsi_admin_user</flyway.datasource.username>
-    <flyway.datasource.password>admin1</flyway.datasource.password>
+    <flyway.datasource.password></flyway.datasource.password>
     <!-- flyway.locations>classpath:db/migration/sqlserver</flyway.locations -->
     <flyway.locations>classpath:db/migration/postgresql</flyway.locations>
     <!-- Note: Schema name is case-sensitive. -->
@@ -564,7 +564,7 @@
     </repository>
     <repository>
       <id>codeartifact</id>
-      <url>https://mdaca-201959883603.d.codeartifact.us-east-2.amazonaws.com/maven/OHDSI/</url>
+      <url>https://mdaca-${aws_account_id}.d.codeartifact.us-east-2.amazonaws.com/maven/OHDSI/</url>
     </repository>
   </repositories>
 
@@ -1504,7 +1504,7 @@
         <datasource.driverClassName>org.postgresql.Driver</datasource.driverClassName>
         <datasource.url>jdbc:postgresql://localhost:5432/OHDSI?currentSchema=webapi</datasource.url>
         <datasource.username>ohdsi_app_user</datasource.username>
-        <datasource.password>app1</datasource.password>
+        <datasource.password></datasource.password>
         <datasource.dialect>postgresql</datasource.dialect>
         <datasource.ohdsi.schema>webapi</datasource.ohdsi.schema>
         <datasource.dialect.source>postgresql</datasource.dialect.source>
@@ -1512,7 +1512,7 @@
         <flyway.datasource.url>${datasource.url}</flyway.datasource.url>
         <!-- flyway.datasource.username>userWithWritesToOhdsiSchema</flyway.datasource.username -->
         <flyway.datasource.username>ohdsi_admin_user</flyway.datasource.username>
-        <flyway.datasource.password>admin1</flyway.datasource.password>
+        <flyway.datasource.password></flyway.datasource.password>
         <flyway.schemas>${datasource.ohdsi.schema}</flyway.schemas>
         <flyway.placeholders.ohdsiSchema>${datasource.ohdsi.schema}</flyway.placeholders.ohdsiSchema>
         <flyway.locations>classpath:db/migration/postgresql</flyway.locations>
@@ -1582,13 +1582,13 @@
         <datasource.driverClassName>com.microsoft.sqlserver.jdbc.SQLServerDriver</datasource.driverClassName>
         <datasource.url>jdbc:sqlserver://server</datasource.url>
         <datasource.username>USER</datasource.username>
-        <datasource.password>PASS</datasource.password>
+        <datasource.password></datasource.password>
         <datasource.dialect>sql server</datasource.dialect>
         <datasource.ohdsi.schema>OHDSI_schema</datasource.ohdsi.schema>
         <flyway.datasource.driverClassName>${datasource.driverClassName}</flyway.datasource.driverClassName>
         <flyway.datasource.url>${datasource.url}</flyway.datasource.url>
         <flyway.datasource.username>FLYWAY_USER</flyway.datasource.username>
-        <flyway.datasource.password>FLYWAY_PASS</flyway.datasource.password>
+        <flyway.datasource.password></flyway.datasource.password>
         <flyway.schemas>${datasource.ohdsi.schema}</flyway.schemas>
         <flyway.placeholders.ohdsiSchema>${datasource.ohdsi.schema}</flyway.placeholders.ohdsiSchema>
         <flyway.locations>classpath:db/migration/sqlserver</flyway.locations>
@@ -2106,15 +2106,15 @@
         <miredot.phase>none</miredot.phase>
         <skipTests>true</skipTests>
         <datasource.driverClassName>org.postgresql.Driver</datasource.driverClassName>
-        <datasource.url>jdbc:postgresql://54.209.111.128:5432/vocabularyv5</datasource.url>
+        <datasource.url>jdbc:postgresql://localhost/vocabularyv5</datasource.url>
         <datasource.username>USER</datasource.username>
-        <datasource.password>PASS</datasource.password>
+        <datasource.password></datasource.password>
         <datasource.dialect>postgresql</datasource.dialect>
         <datasource.ohdsi.schema>ohdsi</datasource.ohdsi.schema>
         <flyway.datasource.driverClassName>${datasource.driverClassName}</flyway.datasource.driverClassName>
         <flyway.datasource.url>${datasource.url}</flyway.datasource.url>
         <flyway.datasource.username>userWithWritesToOhdsiSchema</flyway.datasource.username>
-        <flyway.datasource.password>PASS</flyway.datasource.password>
+        <flyway.datasource.password></flyway.datasource.password>
         <flyway.schemas>${datasource.ohdsi.schema}</flyway.schemas>
         <flyway.placeholders.ohdsiSchema>${datasource.ohdsi.schema}</flyway.placeholders.ohdsiSchema>
         <flyway.locations>classpath:db/migration/postgresql</flyway.locations>
@@ -2144,7 +2144,7 @@
         <repository>
             <id>codeartifact</id>
             <name>AWS CodeArtifact MDACA OHDSI Repository</name>
-            <url>https://mdaca-201959883603.d.codeartifact.us-east-2.amazonaws.com/maven/OHDSI/</url>
+            <url>https://mdaca-${aws_account_id}.d.codeartifact.us-east-2.amazonaws.com/maven/OHDSI/</url>
             <releases>
                 <enabled>true</enabled>
             </releases>

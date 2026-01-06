@@ -22,3 +22,5 @@ sandbox/
 **/resources/config/application*-dev-*.yml
 /.vscode
 /.run
+dev_settings.xml
+WebAPI.war

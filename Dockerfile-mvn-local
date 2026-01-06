@@ -59,12 +59,11 @@ COPY --from=builder /code/war/META-INF META-INF
 COPY --from=builder /code/lib/trino-jdbc/trino-jdbc-*.jar WEB-INF/lib/
 
 ENV WEBAPI_DATASOURCE_URL="jdbc:postgresql://host.docker.internal:5432/OHDSI?currentSchema=webapi"
-# ENV WEBAPI_DATASOURCE_URL="jdbc:postgresql://10.0.21.93:32000/OHDSI?currentSchema=webapi"
 ENV WEBAPI_DATASOURCE_USERNAME=ohdsi_app_user
-ENV WEBAPI_DATASOURCE_PASSWORD=app1
+ENV WEBAPI_DATASOURCE_PASSWORD=
 ENV WEBAPI_SCHEMA=webapi
 ENV FLYWAY_DATASOURCE_USERNAME=ohdsi_admin_user
-ENV FLYWAY_DATASOURCE_PASSWORD=admin1
+ENV FLYWAY_DATASOURCE_PASSWORD=
 
 EXPOSE 8080
 

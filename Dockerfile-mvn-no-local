@@ -30,7 +30,7 @@ RUN mvn package -q -s ${MAVEN_M2} ${MAVEN_PARAMS} -P${MAVEN_PROFILE} && \
     rm WebAPI.war
 
 # OHDSI WebAPI and ATLAS web application running as a Spring Boot application with Java 11
-FROM 201959883603.dkr.ecr.us-east-2.amazonaws.com/mdaca/base-images/ironbank-alpine-java:3.20.6_jdk17
+FROM aws_account_id.dkr.ecr.us-east-2.amazonaws.com/mdaca/base-images/ironbank-alpine-java:3.20.6_jdk17
 
 # Install PostgreSQL client
 RUN apk update && apk add --no-cache postgresql-client iproute2
@@ -68,12 +68,11 @@ COPY --from=builder --chown=webapi /code/war/META-INF META-INF
 COPY --from=builder /code/lib/trino-jdbc/trino-jdbc-*.jar WEB-INF/lib/
 
 ENV WEBAPI_DATASOURCE_URL="jdbc:postgresql://host.docker.internal:5432/OHDSI?currentSchema=webapi"
-# ENV WEBAPI_DATASOURCE_URL="jdbc:postgresql://10.0.21.93:32000/OHDSI?currentSchema=webapi"
 ENV WEBAPI_DATASOURCE_USERNAME=ohdsi_app_user
-ENV WEBAPI_DATASOURCE_PASSWORD=app1
+ENV WEBAPI_DATASOURCE_PASSWORD=
 ENV WEBAPI_SCHEMA=webapi
 ENV FLYWAY_DATASOURCE_USERNAME=ohdsi_admin_user
-ENV FLYWAY_DATASOURCE_PASSWORD=admin1
+ENV FLYWAY_DATASOURCE_PASSWORD=
 
 EXPOSE 8080
 
