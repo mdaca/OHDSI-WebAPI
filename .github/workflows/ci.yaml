@@ -52,7 +52,10 @@ jobs:
           REGISTRY=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
 
           # Build the Docker image
-          docker build --no-cache --build-arg CODEARTIFACT_AUTH_TOKEN=$CODEARTIFACT_AUTH_TOKEN -f Dockerfile-mvn-no-local -t $REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker build --no-cache \
+            --build-arg CODEARTIFACT_AUTH_TOKEN=$CODEARTIFACT_AUTH_TOKEN \
+            --build-arg AWS_ACCOUNT_ID=$AWS_ACCOUNT_ID \
+            -f Dockerfile-mvn-no-local -t $REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
 
           # Push the Docker image to ECR
           docker push $REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
