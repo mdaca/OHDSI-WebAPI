@@ -44,7 +44,6 @@ jobs:
             --output text > $CODEARTIFACT_TOKEN_FILE
 
           export CODEARTIFACT_AUTH_TOKEN=$(cat $CODEARTIFACT_TOKEN_FILE)
-          echo "$CODEARTIFACT_AUTH_TOKEN"
 
           # Login to ECR
           aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
