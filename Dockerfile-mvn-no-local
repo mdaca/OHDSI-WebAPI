@@ -11,7 +11,7 @@ ENV CODEARTIFACT_AUTH_TOKEN=${CODEARTIFACT_AUTH_TOKEN}
 
 ARG AWS_ACCOUNT_ID
 ENV AWS_ACCOUNT_ID=${AWS_ACCOUNT_ID}
-RUN echo $CODEARTIFACT_AUTH_TOKEN && curl -LSsO https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/download/v${OPENTELEMETRY_JAVA_AGENT_VERSION}/opentelemetry-javaagent.jar
+RUN curl -LSsO https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/download/v${OPENTELEMETRY_JAVA_AGENT_VERSION}/opentelemetry-javaagent.jar
 
 # Copy .m2 folder
 COPY .m2 /code/.m2
