@@ -1,3 +1,5 @@
+ARG CODEARTIFACT_AUTH_TOKEN
+
 FROM maven:3.9.7-eclipse-temurin-17-alpine AS builder
 WORKDIR /code
 ARG MAVEN_PROFILE=webapi-docker
