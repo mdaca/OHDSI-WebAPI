@@ -564,7 +564,7 @@
     </repository>
     <repository>
       <id>codeartifact</id>
-      <url>https://mdaca-${secrets.AWS_ACCOUNT_ID}.d.codeartifact.us-east-2.amazonaws.com/maven/OHDSI/</url>
+      <url>https://mdaca-201959883603.d.codeartifact.us-east-2.amazonaws.com/maven/OHDSI/</url>
     </repository>
   </repositories>
 
@@ -2149,7 +2149,7 @@
         <repository>
             <id>codeartifact</id>
             <name>AWS CodeArtifact MDACA OHDSI Repository</name>
-            <url>https://mdaca-${secrets.AWS_ACCOUNT_ID}.d.codeartifact.us-east-2.amazonaws.com/maven/OHDSI/</url>
+            <url>https://mdaca-201959883603.d.codeartifact.us-east-2.amazonaws.com/maven/OHDSI/</url>b
             <releases>
                 <enabled>true</enabled>
             </releases>
