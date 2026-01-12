@@ -2149,7 +2149,7 @@
         <repository>
             <id>codeartifact</id>
             <name>AWS CodeArtifact MDACA OHDSI Repository</name>
-            <url>https://mdaca-201959883603.d.codeartifact.us-east-2.amazonaws.com/maven/OHDSI/</url>b
+            <url>https://mdaca-201959883603.d.codeartifact.us-east-2.amazonaws.com/maven/OHDSI/</url>
             <releases>
                 <enabled>true</enabled>
             </releases>
