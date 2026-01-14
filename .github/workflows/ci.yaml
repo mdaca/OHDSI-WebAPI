@@ -5,7 +5,7 @@ on:
     - cron: '0 23 * * 0'
   push:
     branches:
-      - mdaca-3.0.2.stable.a
+      - mdaca-3.0.2.stable
     paths:
       - 'Dockerfile-mvn-no-local'
       - 'src/*'
@@ -25,7 +25,7 @@ jobs:
 
       - name: Build and Push Docker Image
         env:
-          IMAGE_TAG: 3.0.2.3
+          IMAGE_TAG: 3.0.2.stable
           ECR_REPOSITORY: mdaca/ohdsi/webapi
           AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
