@@ -5,7 +5,7 @@ on:
     - cron: '0 23 * * 0'
   push:
     branches:
-      - mdaca-3.0.2
+      - mdaca-3.0.2.stable.a
     paths:
       - 'Dockerfile-mvn-no-local'
       - 'src/*'
